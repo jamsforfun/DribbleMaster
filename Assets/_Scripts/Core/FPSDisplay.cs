@@ -7,7 +7,6 @@ using Sirenix.OdinInspector;
 /// <summary>
 /// Display fps in game
 /// </summary>
-[ExecuteInEditMode]
 public class FPSDisplay : MonoBehaviour
 {
     [FoldoutGroup("GamePlay"), Tooltip("Number to fill"), SerializeField]

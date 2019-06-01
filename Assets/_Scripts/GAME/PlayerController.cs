@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     [FoldoutGroup("Object"), Tooltip("id unique du joueur correspondant à sa manette"), SerializeField]
     private PlayerInput _playerInput;
 
+    private Vector2 _lastMove;
+
     private void OnEnable()
     {
         Init();
@@ -44,16 +46,18 @@ public class PlayerController : MonoBehaviour
             return;
         }
         //_rigidBody.drag = 0f;
-        _rigidBody.velocity = _playerInput.Move * _forceSpeed * Time.fixedDeltaTime;
+        _rigidBody.velocity = _playerInput.Move.normalized * _forceSpeed * Time.fixedDeltaTime;
     }
 
     private void Rotate()
     {
         if (!_playerInput.IsMoving())
         {
+            _mainSprite.transform.rotation = ExtQuaternion.DirObject2d(_mainSprite.transform.rotation,_lastMove, _turnRate, ExtQuaternion.TurnType.Z, false, false, true);
             return;
         }
-        _mainSprite.transform.rotation = ExtQuaternion.DirObject2d(_mainSprite.transform.rotation, _playerInput.Move, _turnRate, ExtQuaternion.TurnType.Z);
+        _mainSprite.transform.rotation = ExtQuaternion.DirObject2d(_mainSprite.transform.rotation, _playerInput.Move, _turnRate, ExtQuaternion.TurnType.Z, false, false, true);
+        _lastMove = _playerInput.Move;
     }
 
     // Update is called once per frame
@@ -61,5 +65,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         Rotate();
+
+        
     }
 }

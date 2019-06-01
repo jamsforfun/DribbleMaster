@@ -15,25 +15,39 @@ public class OnCollisionObject : MonoBehaviour
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     public TypeObject TypeRigidBody = TypeObject.PLAYER;
 
+    [FoldoutGroup("Object"), SerializeField]
+    private CountPlayerPushingBox _countPlayerPushingBox;
     [FoldoutGroup("Object"), ShowIf("TypeRigidBody", TypeObject.BOX), SerializeField]
     private BoxManager _boxManager;
     [FoldoutGroup("Object"), ShowIf("TypeRigidBody", TypeObject.PLAYER), Tooltip(""), SerializeField]
     private PlayerController _playerController;
 
     [FoldoutGroup("Object"), Tooltip(""), SerializeField, ReadOnly]
-    private List<OnCollisionObject> _listRigidBody = new List<OnCollisionObject>();
+    public List<OnCollisionObject> ListRigidBody = new List<OnCollisionObject>();
+
+    private void OnEnable()
+    {
+        if (TypeRigidBody == TypeObject.BOX)
+        {
+            _countPlayerPushingBox.AddBox(this);
+        }
+        else if (TypeRigidBody == TypeObject.PLAYER)
+        {
+            _countPlayerPushingBox.AddPlayer(this);
+        }
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         OnCollisionObject collisionObject = collision.collider.GetExtComponentInParents<OnCollisionObject>(99, true);
 
-        if (collisionObject && !_listRigidBody.Contains(collisionObject))
+        if (collisionObject && !ListRigidBody.Contains(collisionObject))
         {
-            _listRigidBody.Add(collisionObject);
+            ListRigidBody.Add(collisionObject);
 
             if (TypeRigidBody == TypeObject.BOX)
             {
-                //_boxManager
+                _boxManager.OnChangePlayers();
             }
         }
     }
@@ -42,9 +56,14 @@ public class OnCollisionObject : MonoBehaviour
     {
         OnCollisionObject collisionObject = collision.collider.GetExtComponentInParents<OnCollisionObject>(99, true);
 
-        if (collisionObject && _listRigidBody.Contains(collisionObject))
+        if (collisionObject && ListRigidBody.Contains(collisionObject))
         {
-            _listRigidBody.Remove(collisionObject);
+            ListRigidBody.Remove(collisionObject);
+
+            if (TypeRigidBody == TypeObject.BOX)
+            {
+                _boxManager.OnChangePlayers();
+            }
         }
     }
 }

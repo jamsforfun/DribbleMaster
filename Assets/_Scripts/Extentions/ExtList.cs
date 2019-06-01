@@ -23,6 +23,23 @@ public static class ExtList
     }
 
     /// <summary>
+    /// add the item in the lsit if it's not already in the lsit
+    /// </summary>
+    /// <typeparam name="T">type</typeparam>
+    /// <param name="listEnum">list</param>
+    /// <param name="item">item to add</param>
+    /// <returns>return false if already in the list, true if we add successfuly in the list</returns>
+    public static bool AddIfNotContain<T>(this List<T> listEnum, T item)
+    {
+        if (listEnum.Contains(item))
+        {
+            return (false);
+        }
+        listEnum.Add(item);
+        return (true);
+    }
+
+    /// <summary>
     /// true return if in the list, there is a word that is substring of the fileName
     /// </summary>
     /// <param name="toTransform"></param>

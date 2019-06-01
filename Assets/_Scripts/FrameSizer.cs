@@ -1,4 +1,5 @@
 ﻿using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +7,28 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class FrameSizer : MonoBehaviour
 {
-	[SerializeField, OnValueChanged("Init")] private float _xScale = 1;
-	[SerializeField, OnValueChanged("Init")] private float _yScale = 1;
+    public enum AmountPlayer
+    {
+        ONE = 1,
+        TWO = 2,
+        TREE = 3,
+        FOUR = 4,
+        MORE = 5,
+        LOCKED = 10,
+    }
 
-	[FoldoutGroup("Frame sides"), SerializeField] private Transform _top;
+    
+
+    [FoldoutGroup("GamePlay"), SerializeField, ReadOnly]
+    public AmountPlayer AmountPlayerNeeded = AmountPlayer.ONE;
+    [FoldoutGroup("GamePlay"), SerializeField]
+    public FrameSizerSettings FrameSizerSettings;
+
+    [SerializeField, OnValueChanged("Init")] private float _xScale = 1;
+	[SerializeField, OnValueChanged("Init")] private float _yScale = 1;
+    [SerializeField, ReadOnly] private float _air = 0;
+
+    [FoldoutGroup("Frame sides"), SerializeField] private Transform _top;
 	[FoldoutGroup("Frame sides"), SerializeField] private Transform _right;
 	[FoldoutGroup("Frame sides"), SerializeField] private Transform _bottom;
 	[FoldoutGroup("Frame sides"), SerializeField] private Transform _left;
@@ -19,11 +38,71 @@ public class FrameSizer : MonoBehaviour
 	private Vector2 _frameCenter;
 	private const float NORMAL_SCALE = 10;
 
+    /// <summary>
+    /// determine, with the number of player pushing given, we can push us !
+    /// </summary>
+    /// <param name="numberOfPLayerPushing">number of player pushing this</param>
+    /// <returns>true if we can be pushed</returns>
+    public bool CanPushThis(int numberOfPLayerPushing)
+    {
+        //do nothing if we are locked
+        if (AmountPlayerNeeded == AmountPlayer.LOCKED)
+        {
+            return (false);
+        }
+
+        //if the number of player is the same as AmountPlayerNeeded, ok
+        if ((int)AmountPlayerNeeded == numberOfPLayerPushing)
+        {
+            return (true);
+        }
+
+        //if the number of player is more than 4, ok
+        if (AmountPlayerNeeded == AmountPlayer.MORE && numberOfPLayerPushing > 4)
+        {
+            return (true);
+        }
+
+        return (false);
+    }
+
+    /// <summary>
+    /// the the number of player required for pushing this
+    /// </summary>
+    /// <param name="numberOfPLayerPushing"></param>
+    public void SetupNumberOfNeededPlayerForPushing()
+    {
+        if (AmountPlayerNeeded == AmountPlayer.LOCKED)
+        {
+            return;
+        }
+
+        if (_air <= FrameSizerSettings.AmountMinAirForPush.onePlayerAir)
+        {
+            AmountPlayerNeeded = AmountPlayer.ONE;
+        }
+        else if (_air <= FrameSizerSettings.AmountMinAirForPush.twoPlayerAir)
+        {
+            AmountPlayerNeeded = AmountPlayer.TWO;
+        }
+        else if (_air <= FrameSizerSettings.AmountMinAirForPush.treePlayerAir)
+        {
+            AmountPlayerNeeded = AmountPlayer.TREE;
+        }
+        else if (_air <= FrameSizerSettings.AmountMinAirForPush.fourPlayerAir)
+        {
+            AmountPlayerNeeded = AmountPlayer.FOUR;
+        }
+        else
+        {
+            AmountPlayerNeeded = AmountPlayer.MORE;
+        }
+    }
+
 #if UNITY_EDITOR
     //[UnityEditor.Callbacks.DidReloadScripts]
     private void OnEnable()
     {
-        Debug.Log("ici !");
         Init();
     }
 
@@ -41,6 +120,9 @@ public class FrameSizer : MonoBehaviour
 
         ScaleXAxis();
         ScaleYAxis();
+
+        _air = _xScale * _yScale;
+        SetupNumberOfNeededPlayerForPushing();
     }
 
 	private void ScaleXAxis()

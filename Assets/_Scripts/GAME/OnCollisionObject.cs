@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class OnCollisionObject : MonoBehaviour
 {
@@ -13,13 +14,13 @@ public class OnCollisionObject : MonoBehaviour
     }
 
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
-    public TypeObject TypeRigidBody = TypeObject.PLAYER;
+    public TypeObject TypeRigidBodyMe = TypeObject.PLAYER;
 
     [FoldoutGroup("Object"), SerializeField]
     private CountPlayerPushingBox _countPlayerPushingBox;
-    [FoldoutGroup("Object"), ShowIf("TypeRigidBody", TypeObject.BOX), SerializeField]
-    private BoxManager _boxManager;
-    [FoldoutGroup("Object"), ShowIf("TypeRigidBody", TypeObject.PLAYER), Tooltip(""), SerializeField]
+    [FoldoutGroup("Object"), ShowIf("TypeRigidBodyMe", TypeObject.BOX), SerializeField, FormerlySerializedAs("_boxManager")]
+    private BoxManager BoxManager;
+    [FoldoutGroup("Object"), ShowIf("TypeRigidBodyMe", TypeObject.PLAYER), Tooltip(""), SerializeField]
     private PlayerController _playerController;
 
     [FoldoutGroup("Object"), Tooltip(""), SerializeField, ReadOnly]
@@ -27,27 +28,38 @@ public class OnCollisionObject : MonoBehaviour
 
     private void OnEnable()
     {
-        if (TypeRigidBody == TypeObject.BOX)
+        if (TypeRigidBodyMe == TypeObject.BOX)
         {
             _countPlayerPushingBox.AddBox(this);
         }
-        else if (TypeRigidBody == TypeObject.PLAYER)
+        else if (TypeRigidBodyMe == TypeObject.PLAYER)
         {
             _countPlayerPushingBox.AddPlayer(this);
         }
     }
 
+    /// <summary>
+    /// if we collide with other OnCollisionObject
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         OnCollisionObject collisionObject = collision.collider.GetExtComponentInParents<OnCollisionObject>(99, true);
 
+        
         if (collisionObject && !ListRigidBody.Contains(collisionObject))
         {
             ListRigidBody.Add(collisionObject);
 
-            if (TypeRigidBody == TypeObject.BOX)
+            //if we are a Box, and other collision is a player
+            if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.PLAYER)
             {
-                _boxManager.OnChangePlayers();
+                BoxManager.OnPlayerPushOrUnpush();
+            }
+            //else if we are a box, and other is a box too...
+            else if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.BOX)
+            {
+                BoxManager.CollideWithOtherBox(collisionObject.BoxManager);
             }
         }
     }
@@ -60,9 +72,15 @@ public class OnCollisionObject : MonoBehaviour
         {
             ListRigidBody.Remove(collisionObject);
 
-            if (TypeRigidBody == TypeObject.BOX)
+            //if we are a Box, and other collision is a player
+            if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.PLAYER)
             {
-                _boxManager.OnChangePlayers();
+                BoxManager.OnPlayerPushOrUnpush();
+            }
+            //else if we are a box, and other is a box too...
+            else if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.BOX)
+            {
+                BoxManager.UnCollideWithOtherBox(collisionObject.BoxManager);
             }
         }
     }

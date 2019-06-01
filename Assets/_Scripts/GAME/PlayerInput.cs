@@ -28,7 +28,7 @@ public class PlayerInput : MonoBehaviour
     private void GetInput()
     {
         //all button
-        Shoot = PlayerConnected.Instance.GetPlayer(playerController.PlayerSettings.Id).GetButton("Shoot");
+        Shoot = PlayerConnected.Instance.GetPlayer(playerController.PlayerSettings.Id).GetButton("FireA");
 
         Move = new Vector2(
             PlayerConnected.Instance.GetPlayer(playerController.PlayerSettings.Id).GetAxis("Move Horizontal"),

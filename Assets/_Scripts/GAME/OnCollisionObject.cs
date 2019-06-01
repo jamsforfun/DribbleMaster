@@ -21,25 +21,25 @@ public class OnCollisionObject : MonoBehaviour
     private PlayerController _playerController;
 
     [FoldoutGroup("Object"), Tooltip(""), SerializeField, ReadOnly]
-    private List<Rigidbody2D> _listRigidBody = new List<Rigidbody2D>();
+    private List<OnCollisionObject> _listRigidBody = new List<OnCollisionObject>();
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Rigidbody2D rb = collision.collider.GetExtComponentInParents<Rigidbody2D>(99, true);
+        OnCollisionObject collisionObject = collision.collider.GetExtComponentInParents<OnCollisionObject>(99, true);
 
-        if (rb && !_listRigidBody.Contains(rb))
+        if (collisionObject && !_listRigidBody.Contains(collisionObject))
         {
-            _listRigidBody.Add(rb);
+            _listRigidBody.Add(collisionObject);
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Rigidbody2D rb = collision.collider.GetExtComponentInParents<Rigidbody2D>(99, true);
+        OnCollisionObject collisionObject = collision.collider.GetExtComponentInParents<OnCollisionObject>(99, true);
 
-        if (rb && _listRigidBody.Contains(rb))
+        if (collisionObject && _listRigidBody.Contains(collisionObject))
         {
-            _listRigidBody.Remove(rb);
+            _listRigidBody.Remove(collisionObject);
         }
     }
 }

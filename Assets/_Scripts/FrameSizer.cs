@@ -45,8 +45,8 @@ public class FrameSizer : MonoBehaviour
 		}
 		else
 		{
-			_right.localPosition = _frameCenter + scaleRatio *  _frameSide / 2 * Vector2.right;
-			_left.localPosition = _frameCenter + scaleRatio *  _frameSide / 2 * Vector2.left;
+			_right.localPosition = _frameCenter + scaleRatio *  _frameSide/2  * Vector2.right;
+			_left.localPosition = _frameCenter + scaleRatio * _frameSide/2 * Vector2.left;
 		}
 	}
 
@@ -63,8 +63,8 @@ public class FrameSizer : MonoBehaviour
 		}
 		else
 		{
-			_top.localPosition = _frameCenter + scaleRatio *  _frameSide / 2 * Vector2.up;
-			_bottom.localPosition = _frameCenter + scaleRatio * _frameSide / 2 * Vector2.down;
+			_top.localPosition = _frameCenter + scaleRatio * _frameSide / 2 * Vector2.up;
+			_bottom.localPosition = _frameCenter + scaleRatio * _frameSide  / 2 * Vector2.down;
 		}
 	}
 }

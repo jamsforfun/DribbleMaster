@@ -7,11 +7,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [FoldoutGroup("GamePLay"), Tooltip("id unique du joueur correspondant à sa manette"), OnValueChanged("Init"), SerializeField]
-    public int IdPlayer = 0;
+    public PlayerSettings PlayerSettings;
     [FoldoutGroup("GamePLay"), Tooltip("id unique du joueur correspondant à sa manette"), SerializeField]
-    private Color _color;
+    private float _forceSpeed = 10000f;
     [FoldoutGroup("GamePLay"), Tooltip("id unique du joueur correspondant à sa manette"), SerializeField]
-    private float _forceSpeed = 5f;
+    private float _turnRate = 30f;
 
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     private SpriteRenderer _mainSprite;
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < eyes.Length; i++)
         {
-            eyes[i].color = _color;
+            eyes[i].color = PlayerSettings.Color;
         }
     }
 
@@ -41,16 +41,25 @@ public class PlayerController : MonoBehaviour
     {
         if (!_playerInput.IsMoving())
         {
-            //_rigidBody.drag = 10f;
             return;
         }
         //_rigidBody.drag = 0f;
-        _rigidBody.MovePosition(_rigidBody.position + _playerInput.Move * _forceSpeed);
+        _rigidBody.velocity = _playerInput.Move * _forceSpeed * Time.fixedDeltaTime;
+    }
+
+    private void Rotate()
+    {
+        if (!_playerInput.IsMoving())
+        {
+            return;
+        }
+        _mainSprite.transform.rotation = ExtQuaternion.DirObject2d(_mainSprite.transform.rotation, _playerInput.Move, _turnRate, ExtQuaternion.TurnType.Z);
     }
 
     // Update is called once per frame
     private void FixedUpdate()
     {
         Move();
+        Rotate();
     }
 }

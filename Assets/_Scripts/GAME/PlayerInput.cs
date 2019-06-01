@@ -28,11 +28,11 @@ public class PlayerInput : MonoBehaviour
     private void GetInput()
     {
         //all button
-        Shoot = PlayerConnected.Instance.GetPlayer(playerController.IdPlayer).GetButton("Shoot");
+        Shoot = PlayerConnected.Instance.GetPlayer(playerController.PlayerSettings.Id).GetButton("Shoot");
 
         Move = new Vector2(
-            PlayerConnected.Instance.GetPlayer(playerController.IdPlayer).GetAxis("Move Horizontal"),
-            PlayerConnected.Instance.GetPlayer(playerController.IdPlayer).GetAxis("Move Vertical"));
+            PlayerConnected.Instance.GetPlayer(playerController.PlayerSettings.Id).GetAxis("Move Horizontal"),
+            PlayerConnected.Instance.GetPlayer(playerController.PlayerSettings.Id).GetAxis("Move Vertical"));
     }
 
     public bool IsMoving()

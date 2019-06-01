@@ -3,9 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OnCollisionPlayer : MonoBehaviour
+public class OnCollisionObject : MonoBehaviour
 {
+    public enum TypeObject
+    {
+        NONE,
+        BOX,
+        PLAYER,
+    }
+
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
+    public TypeObject TypeRigidBody = TypeObject.PLAYER;
+
+    [FoldoutGroup("Object"), ShowIf("TypeRigidBody", TypeObject.BOX), SerializeField]
+    private BoxManager _boxManager;
+    [FoldoutGroup("Object"), ShowIf("TypeRigidBody", TypeObject.PLAYER), Tooltip(""), SerializeField]
     private PlayerController _playerController;
 
     [FoldoutGroup("Object"), Tooltip(""), SerializeField, ReadOnly]

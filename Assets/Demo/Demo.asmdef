@@ -1,0 +1,13 @@
+{
+    "name": "Demo",
+    "references": [
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "Steamworks.NET",
+        "Unity.ugui"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true
+}

@@ -6,8 +6,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class FrameSizer : MonoBehaviour
 {
-	[SerializeField, OnValueChanged("ScaleXAxis")] private float _xScale = 1;
-	[SerializeField, OnValueChanged("ScaleYAxis")] private float _yScale = 1;
+	[SerializeField, OnValueChanged("Init")] private float _xScale = 1;
+	[SerializeField, OnValueChanged("Init")] private float _yScale = 1;
 
 	[FoldoutGroup("Frame sides"), SerializeField] private Transform _top;
 	[FoldoutGroup("Frame sides"), SerializeField] private Transform _right;
@@ -19,7 +19,15 @@ public class FrameSizer : MonoBehaviour
 	private Vector2 _frameCenter;
 	private const float NORMAL_SCALE = 10;
 
-	[Button]
+#if UNITY_EDITOR
+    //[UnityEditor.Callbacks.DidReloadScripts]
+    private void OnEnable()
+    {
+        Debug.Log("ici !");
+        Init();
+    }
+
+    [Button]
 	private void Init()
 	{
 		_top.localPosition = new Vector3(92, 191, 0);
@@ -29,12 +37,15 @@ public class FrameSizer : MonoBehaviour
 		_frameSide = _top.localPosition.y - _bottom.localPosition.y;
 		_borderHalfWidth = 3.5f;
 		_frameCenter = (_top.localPosition + _bottom.localPosition) / 2;
-		Debug.DrawLine(transform.position, _frameCenter);
-	}
+		//Debug.DrawLine(transform.position, _frameCenter);
+
+        ScaleXAxis();
+        ScaleYAxis();
+    }
 
 	private void ScaleXAxis()
 	{
-		_top.localScale = new Vector3(_xScale, _top.localScale.y, _top.localScale.z);
+        _top.localScale = new Vector3(_xScale, _top.localScale.y, _top.localScale.z);
 		_bottom.localScale = new Vector3(_xScale, _bottom.localScale.y, _bottom.localScale.z);
 
 		float scaleRatio = _xScale / NORMAL_SCALE;
@@ -67,4 +78,5 @@ public class FrameSizer : MonoBehaviour
 			_bottom.localPosition = _frameCenter + scaleRatio * _frameSide  / 2 * Vector2.down;
 		}
 	}
+#endif
 }

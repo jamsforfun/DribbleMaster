@@ -104,6 +104,14 @@ public static class ExtRandom
     }
 
     /// <summary>
+    /// return a new random vector2
+    /// </summary>
+    public static Vector2 GetRandomVectorNormalized()
+    {
+        return (new Vector2(GetRandomNumber(-1f, 1f), GetRandomNumber(-1f, 1f)));
+    }
+
+    /// <summary>
     /// get a random color
     /// </summary>
     /// <returns></returns>

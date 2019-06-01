@@ -152,6 +152,7 @@ public static class GameData
     {
         GameOver,                   //event game over
         SceneLoaded,                //called when a scene is loaded
+        GamePadConnectionChange,
     };
 
     public enum PoolTag

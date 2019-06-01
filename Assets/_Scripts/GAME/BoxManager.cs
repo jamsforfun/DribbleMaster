@@ -1,18 +1,15 @@
-﻿using System.Collections;
+﻿using Sirenix.OdinInspector;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BoxManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [FoldoutGroup("Object"), Tooltip(""), SerializeField]
+    private OnCollisionObject _onCollisionObject;
 
-    // Update is called once per frame
-    void Update()
+    public void OnChangePlayers()
     {
-        
+
     }
 }

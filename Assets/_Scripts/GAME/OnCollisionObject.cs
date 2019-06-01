@@ -30,6 +30,11 @@ public class OnCollisionObject : MonoBehaviour
         if (collisionObject && !_listRigidBody.Contains(collisionObject))
         {
             _listRigidBody.Add(collisionObject);
+
+            if (TypeRigidBody == TypeObject.BOX)
+            {
+                //_boxManager
+            }
         }
     }
 

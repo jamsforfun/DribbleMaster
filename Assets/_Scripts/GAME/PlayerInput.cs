@@ -11,7 +11,7 @@ public class PlayerInput : MonoBehaviour
     public Vector2 Move;
 
     [FoldoutGroup("Debug"), Tooltip("input for moving Camera horizontally"), ReadOnly]
-    public bool Shoot;
+    public bool Action;
 
     [FoldoutGroup("Object"), Tooltip("id unique du joueur correspondant à sa manette"), SerializeField]
     protected PlayerController playerController;
@@ -28,7 +28,7 @@ public class PlayerInput : MonoBehaviour
     private void GetInput()
     {
         //all button
-        Shoot = PlayerConnected.Instance.GetPlayer(playerController.PlayerSettings.Id).GetButton("FireA");
+        Action = PlayerConnected.Instance.GetPlayer(playerController.PlayerSettings.Id).GetButton("FireA");
 
         Move = new Vector2(
             PlayerConnected.Instance.GetPlayer(playerController.PlayerSettings.Id).GetAxis("Move Horizontal"),

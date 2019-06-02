@@ -13,9 +13,6 @@ public class CountPlayerPushingBox : MonoBehaviour
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     private List<OnCollisionObject> _box;
 
-    [FoldoutGroup("Debug"), Tooltip(""), SerializeField]
-    private List<OnCollisionObject> allPlayerPushingIt = new List<OnCollisionObject>();
-
     /// <summary>
     /// add player at start
     /// </summary>
@@ -39,37 +36,94 @@ public class CountPlayerPushingBox : MonoBehaviour
     /// <returns></returns>
     public int GetNumberPlayerPushingMe(OnCollisionObject toTest)
     {
-        allPlayerPushingIt.Clear();
+        BoxManager box = toTest.BoxManager;
+
+
+
+        box.AllPlayerColliding.Clear();
 
         for (int i = 0; i < _player.Count; i++)
         {
             if (_player[i].DoWeAreCollidingWithThat(toTest))
             {
-                allPlayerPushingIt.AddIfNotContain(_player[i]);
+                box.AllPlayerColliding.AddIfNotContain(_player[i]);
             }
         }
-        TryToAddOther();
+        TryToAddOther(box);
 
 
-        return (allPlayerPushingIt.Count);
+        return (box.AllPlayerColliding.Count);
     }
 
     /// <summary>
     /// Try to add the one pushing to other player...
     /// </summary>
-    private void TryToAddOther()
+    private void TryToAddOther(BoxManager box)
     {
         //here do another pass...
-        for (int i = 0; i < allPlayerPushingIt.Count; i++)
+        for (int i = 0; i < box.AllPlayerColliding.Count; i++)
         {
-            for (int j = 0; j < allPlayerPushingIt[i].ListRigidBody.Count; j++)
+            for (int j = 0; j < box.AllPlayerColliding[i].ListRigidBody.Count; j++)
             {
-                if (allPlayerPushingIt[i].ListRigidBody[j].TypeRigidBodyMe == OnCollisionObject.TypeObject.PLAYER
-                    && !allPlayerPushingIt.Contains(allPlayerPushingIt[i].ListRigidBody[j]))
+                if (box.AllPlayerColliding[i].ListRigidBody[j].TypeRigidBodyMe == OnCollisionObject.TypeObject.PLAYER
+                    && !box.AllPlayerColliding.Contains(box.AllPlayerColliding[i].ListRigidBody[j]))
                 {
-                    allPlayerPushingIt.AddIfNotContain(allPlayerPushingIt[i].ListRigidBody[j]);
-                    TryToAddOther();
+                    box.AllPlayerColliding.AddIfNotContain(box.AllPlayerColliding[i].ListRigidBody[j]);
+                    TryToAddOther(box);
                 }
+            }
+        }
+    }
+
+    /// <summary>
+    /// fill the list of player & box: for knowing in wich box we are as player,
+    /// and in each box, wich player are in where
+    /// </summary>
+    private void SetInWichBoxIsEachPlayer()
+    {
+        //first clear all list
+        for (int i = 0; i < _box.Count; i++)
+        {
+            _box[i].BoxManager.AllPlayerInside.Clear();
+        }
+        for (int i = 0; i < _player.Count; i++)
+        {
+            _player[i].PlayerController.AllBoxInside.Clear();
+        }
+
+        //then for each player...
+        for (int i = 0; i < _player.Count; i++)
+        {
+            SetInWichBoxIsThisPlayer(_player[i]);
+        }
+    }
+
+    private void SetInWichBoxIsThisPlayer(OnCollisionObject player)
+    {
+        for (int i = 0; i < _box.Count; i++)
+        {
+            if (_box[i].BoxManager.IsObjectInsideBox(player.PlayerController.RigidBody.transform.position))
+            {
+                _box[i].BoxManager.AllPlayerInside.AddIfNotContain(player);
+                player.PlayerController.AllBoxInside.AddIfNotContain(_box[i]);
+            }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        SetInWichBoxIsEachPlayer(); //set all player in all boxs
+
+        for (int i = 0; i < _player.Count; i++)
+        {
+            _player[i].PlayerController.CustomFixedUpdate();
+        }
+
+        for (int i = 0; i < _box.Count; i++)
+        {
+            if (_box[i].BoxManager.enabled)
+            {
+                _box[i].BoxManager.CustomFixedUpdate();
             }
         }
     }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4360485098941448076}
   - component: {fileID: 4360485098941448079}
   m_Layer: 0
-  m_Name: Player 0
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4642553757387499128}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1180, y: 600, z: 0}
+  m_LocalPosition: {x: 1180, y: 340, z: 0}
   m_LocalScale: {x: 20, y: 20, z: 20}
   m_Children:
   - {fileID: 4642553759328681618}
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Move: {x: 0, y: 0}
-  Shoot: 0
+  Action: 0
   playerController: {fileID: 4642553757387499130}
 --- !u!114 &4642553757387499130
 MonoBehaviour:
@@ -63,15 +63,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4709319e37b3e4897d10e9536874a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerSettings: {fileID: 11400000, guid: a61fa14dfc5076a419bf14c4859cdc3c, type: 2}
+  PlayerSettings: {fileID: 11400000, guid: d84f0a37a3313364c88da625bbf66cf2, type: 2}
   _forceSpeed: 10000
   _turnRate: 700
   _mainSprite: {fileID: 4642553759328681619}
   eyes:
   - {fileID: 4642553757592822672}
   - {fileID: 4642553758307919065}
-  _rigidBody: {fileID: 4360485098941448076}
+  RigidBody: {fileID: 4360485098941448076}
   _playerInput: {fileID: 4642553757387499131}
+  AllBoxInside: []
 --- !u!114 &1107134014930507372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,11 +85,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e197ce495fb3ef040ad8fa9c6efc874c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TypeRigidBody: 2
+  TypeRigidBodyMe: 2
   _countPlayerPushingBox: {fileID: 0}
-  _boxManager: {fileID: 0}
-  _playerController: {fileID: 4642553757387499130}
+  BoxManager: {fileID: 0}
+  PlayerController: {fileID: 4642553757387499130}
+  Aglomera: {fileID: 0}
   ListRigidBody: []
+  ListRigidBodyPlayer: []
+  ListRigidBodyBox: []
 --- !u!50 &4360485098941448076
 Rigidbody2D:
   serializedVersion: 4
@@ -195,7 +199,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0, b: 0.02020979, a: 1}
+  m_Color: {r: 0, g: 0.65575695, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -274,7 +278,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0, b: 0.02020979, a: 1}
+  m_Color: {r: 0, g: 0.65575695, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

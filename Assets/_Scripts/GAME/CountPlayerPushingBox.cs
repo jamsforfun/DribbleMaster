@@ -29,12 +29,64 @@ public class CountPlayerPushingBox : MonoBehaviour
         _box.AddIfNotContain(box);
     }
 
+    public int GetNumberOfPlayerActuallyPushing(List<OnCollisionObject> playerInContact, ref List<OnCollisionObject> newListPlayer)
+    {
+        newListPlayer.Clear();
+        for (int i = 0; i < playerInContact.Count; i++)
+        {
+            if (playerInContact[i].PlayerController
+                && playerInContact[i].PlayerController.IsMoving())
+            {
+
+                newListPlayer.Add(playerInContact[i]);
+            }
+        }
+
+        return (newListPlayer.Count);
+    }
+
+    public int GetNumberPlayerPushingMyAglomera(OnCollisionObject aglomera)
+    {
+        Aglomera aglo = aglomera.Aglomera;
+
+        aglo.AllPlayerColliding.Clear();
+
+        for (int i = 0; i < aglomera.ListRigidBodyPlayer.Count; i++)
+        {
+            aglo.AllPlayerColliding.AddIfNotContain(aglomera.ListRigidBodyPlayer[i]);
+        }
+
+        TryToAddOtherToAglomera(aglo);
+
+        return (aglo.AllPlayerColliding.Count);
+    }
+
+    /// <summary>
+    /// Try to add the one pushing to other player...
+    /// </summary>
+    private void TryToAddOtherToAglomera(Aglomera aglo)
+    {
+        //here do another pass...
+        for (int i = 0; i < aglo.AllPlayerColliding.Count; i++)
+        {
+            for (int j = 0; j < aglo.AllPlayerColliding[i].ListRigidBody.Count; j++)
+            {
+                if (aglo.AllPlayerColliding[i].ListRigidBody[j].TypeRigidBodyMe == OnCollisionObject.TypeObject.PLAYER
+                    && !aglo.AllPlayerColliding.Contains(aglo.AllPlayerColliding[i].ListRigidBody[j]))
+                {
+                    aglo.AllPlayerColliding.AddIfNotContain(aglo.AllPlayerColliding[i].ListRigidBody[j]);
+                    TryToAddOtherToAglomera(aglo);
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// count how many player are pushing this box
     /// </summary>
     /// <param name="toTest"></param>
     /// <returns></returns>
-    public int GetNumberPlayerPushingMe(OnCollisionObject toTest)
+    public int GetNumberPlayerPushingMyBox(OnCollisionObject toTest)
     {
         BoxManager box = toTest.BoxManager;
 
@@ -49,7 +101,7 @@ public class CountPlayerPushingBox : MonoBehaviour
                 box.AllPlayerColliding.AddIfNotContain(_player[i]);
             }
         }
-        TryToAddOther(box);
+        TryToAddOtherInBox(box);
 
 
         return (box.AllPlayerColliding.Count);
@@ -58,7 +110,7 @@ public class CountPlayerPushingBox : MonoBehaviour
     /// <summary>
     /// Try to add the one pushing to other player...
     /// </summary>
-    private void TryToAddOther(BoxManager box)
+    private void TryToAddOtherInBox(BoxManager box)
     {
         //here do another pass...
         for (int i = 0; i < box.AllPlayerColliding.Count; i++)
@@ -69,7 +121,7 @@ public class CountPlayerPushingBox : MonoBehaviour
                     && !box.AllPlayerColliding.Contains(box.AllPlayerColliding[i].ListRigidBody[j]))
                 {
                     box.AllPlayerColliding.AddIfNotContain(box.AllPlayerColliding[i].ListRigidBody[j]);
-                    TryToAddOther(box);
+                    TryToAddOtherInBox(box);
                 }
             }
         }

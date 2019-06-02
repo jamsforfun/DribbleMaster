@@ -61,9 +61,14 @@ public class PlayerController : MonoBehaviour
         RigidBody.velocity = _playerInput.Move.normalized * _forceSpeed * Time.fixedDeltaTime;
     }
 
+    public bool IsMoving()
+    {
+        return (_playerInput.IsMoving());
+    }
+
     private void Rotate()
     {
-        if (!_playerInput.IsMoving())
+        if (!IsMoving())
         {
             _mainSprite.transform.rotation = ExtQuaternion.DirObject2d(_mainSprite.transform.rotation,_lastMove, _turnRate, ExtQuaternion.TurnType.Z, false, false, true);
             return;

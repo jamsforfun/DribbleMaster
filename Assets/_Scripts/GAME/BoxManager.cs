@@ -38,6 +38,8 @@ public class BoxManager : MonoBehaviour
     [FoldoutGroup("Debug"), Tooltip(""), SerializeField, ReadOnly]
     public List<OnCollisionObject> AllPlayerColliding = new List<OnCollisionObject>();
     [FoldoutGroup("Debug"), Tooltip(""), SerializeField, ReadOnly]
+    public List<OnCollisionObject> AllPlayerCollidingAndPushing = new List<OnCollisionObject>();
+    [FoldoutGroup("Debug"), Tooltip(""), SerializeField, ReadOnly]
     public List<OnCollisionObject> AllPlayerInside = new List<OnCollisionObject>();
 
 
@@ -175,7 +177,9 @@ public class BoxManager : MonoBehaviour
         else
         {
             //else, we are alone !
-            int numberOfPlayer = _countPlayerPushingBox.GetNumberPlayerPushingMe(_onCollisionObject);
+            int numberOfPlayer = _countPlayerPushingBox.GetNumberPlayerPushingMyBox(_onCollisionObject);
+            numberOfPlayer = _countPlayerPushingBox.GetNumberOfPlayerActuallyPushing(AllPlayerColliding, ref AllPlayerCollidingAndPushing);
+
             if (_frameSizer.CanPushThis(numberOfPlayer))
             {
                 RbBox.mass = MASS_WHEN_WE_CAN_PUSH;

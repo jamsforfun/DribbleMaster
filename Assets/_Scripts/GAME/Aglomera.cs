@@ -19,6 +19,12 @@ public class Aglomera : MonoBehaviour, IKillable
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     private CountPlayerPushingBox _countPlayerPushingBox;
 
+    [FoldoutGroup("Debug"), Tooltip(""), SerializeField, ReadOnly]
+    public List<OnCollisionObject> AllPlayerColliding = new List<OnCollisionObject>();
+    [FoldoutGroup("Debug"), Tooltip(""), SerializeField, ReadOnly]
+    public List<OnCollisionObject> AllPlayerCollidingAndPushing = new List<OnCollisionObject>();
+
+
     public void Init(AglomerasManager aglomeraManager, CountPlayerPushingBox countPlayerPushingBox)
     {
         _aglomeraManager = aglomeraManager;
@@ -71,13 +77,14 @@ public class Aglomera : MonoBehaviour, IKillable
 
     private void OnPlayerPushOrUnpush()
     {
-        /*
-        int numberOfPlayer = _countPlayerPushingBox.GetNumberPlayerPushingMe(_onCollisionObject);
+        int numberOfPlayer = _countPlayerPushingBox.GetNumberPlayerPushingMyAglomera(_onCollisionObject);
+        numberOfPlayer = _countPlayerPushingBox.GetNumberOfPlayerActuallyPushing(AllPlayerColliding, ref AllPlayerCollidingAndPushing);
+
         for (int i = 0; i < _allBoxManager.Count; i++)
         {
 
         }
-        */
+        
     }
 
     /// <summary>

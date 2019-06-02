@@ -43,7 +43,7 @@ public class BoxManager : MonoBehaviour
     /// <param name="other"></param>
     public void CollideWithOtherBox(BoxManager other)
     {
-        Debug.Log("2 box collision");
+        //Debug.Log("2 box collision");
     }
     /// <summary>
     /// call here when the box leave other box
@@ -51,7 +51,16 @@ public class BoxManager : MonoBehaviour
     /// <param name="other"></param>
     public void UnCollideWithOtherBox(BoxManager other)
     {
-        Debug.Log("2 box uncollide");
+        //Debug.Log("2 box uncollide");
+    }
+
+    /// <summary>
+    /// force to be pushed
+    /// </summary>
+    public void ForceSetLight()
+    {
+        _rbBox.mass = MASS_WHEN_WE_CAN_PUSH;
+        IsPushed = true;
     }
 
     /// <summary>
@@ -63,8 +72,16 @@ public class BoxManager : MonoBehaviour
         //here call the parent if exist
         if (_aglomeraRef != null)
         {
-
-            IsPushed = false;
+            int numberOfPlayer = _countPlayerPushingBox.GetNumberPlayerPushingMe(_onCollisionObject);
+            if (_frameSizer.CanPushThis(numberOfPlayer))
+            {
+                _aglomeraRef.PushAllInsideAglomera();
+            }
+            else
+            {
+                _rbBox.mass = MASS_WHEN_WE_CANT_PUSH;
+                IsPushed = false;
+            }
         }
         else
         {

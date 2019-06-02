@@ -20,4 +20,17 @@ public class Aglomera : MonoBehaviour
     {
         _allBoxManager.Remove(box);
     }
+
+    public void PushAllInsideAglomera()
+    {
+        for (int i = 0; i < _allBoxManager.Count; i++)
+        {
+            _allBoxManager[i].ForceSetLight();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        //try to desactive all, or one of them ?
+    }
 }

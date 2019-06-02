@@ -38,6 +38,11 @@ public class FrameSizer : MonoBehaviour
 	private Vector2 _frameCenter;
 	private const float NORMAL_SCALE = 10;
 
+	public const float SIDE_LENGTH_IN_LOCAL_SPACE = 10.2f;
+	public const float SIDE_WIDTH_IN_LOCAL_SPACE = 10.2f;
+
+	public const float SPRITE_SIZE_IN_WORLD_SPACE = 20.48f;
+
     /// <summary>
     /// determine, with the number of player pushing given, we can push us !
     /// </summary>
@@ -100,8 +105,6 @@ public class FrameSizer : MonoBehaviour
         }
     }
 
-#if UNITY_EDITOR
-    //[UnityEditor.Callbacks.DidReloadScripts]
     private void OnEnable()
     {
         Init();
@@ -128,8 +131,12 @@ public class FrameSizer : MonoBehaviour
 
 	private void ScaleXAxis()
 	{
-        _top.localScale = new Vector3(_xScale, _top.localScale.y, _top.localScale.z);
-		_bottom.localScale = new Vector3(_xScale, _bottom.localScale.y, _bottom.localScale.z);
+        _top.GetChild(0).localScale = new Vector3(_xScale, _top.GetChild(0).localScale.y, _top.GetChild(0).localScale.z);
+		_bottom.GetChild(0).localScale = new Vector3(_xScale, _bottom.GetChild(0).localScale.y, _bottom.GetChild(0).localScale.z);
+		_top.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_xScale, 1);
+		_top.GetComponent<CustomColliderEffector>().ColliderSideInWorldSpace = SPRITE_SIZE_IN_WORLD_SPACE * _xScale;
+		_bottom.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_xScale, 1);
+		_bottom.GetComponent<CustomColliderEffector>().ColliderSideInWorldSpace = SPRITE_SIZE_IN_WORLD_SPACE * _xScale;
 
 		float scaleRatio = _xScale / NORMAL_SCALE;
 		if (scaleRatio > 1)
@@ -146,8 +153,13 @@ public class FrameSizer : MonoBehaviour
 
 	private void ScaleYAxis()
 	{
-		_right.localScale = new Vector3(_yScale, _right.localScale.y, _right.localScale.z);
-		_left.localScale = new Vector3(_yScale, _left.localScale.y, _left.localScale.z);
+		_right.GetChild(0).localScale = new Vector3(_yScale, _right.GetChild(0).localScale.y, _right.GetChild(0).localScale.z);
+		_left.GetChild(0).localScale = new Vector3(_yScale, _left.GetChild(0).localScale.y, _left.GetChild(0).localScale.z);
+		_right.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_yScale, 1);
+		_right.GetComponent<CustomColliderEffector>().ColliderSideInWorldSpace = SPRITE_SIZE_IN_WORLD_SPACE * _yScale;
+		_left.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_yScale, 1);
+		_left.GetComponent<CustomColliderEffector>().ColliderSideInWorldSpace = SPRITE_SIZE_IN_WORLD_SPACE * _yScale;
+
 
 		float scaleRatio = _yScale / NORMAL_SCALE;
 		if (scaleRatio > 1)
@@ -161,5 +173,4 @@ public class FrameSizer : MonoBehaviour
 			_bottom.localPosition = _frameCenter + scaleRatio * _frameSide  / 2 * Vector2.down;
 		}
 	}
-#endif
 }

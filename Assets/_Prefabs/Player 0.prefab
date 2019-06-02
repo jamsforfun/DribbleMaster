@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4360485098941448079}
   m_Layer: 0
   m_Name: Player 0
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84,10 +84,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e197ce495fb3ef040ad8fa9c6efc874c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TypeRigidBody: 2
+  TypeRigidBodyMe: 2
   _countPlayerPushingBox: {fileID: 0}
-  _boxManager: {fileID: 0}
-  _playerController: {fileID: 4642553757387499130}
+  BoxManager: {fileID: 0}
+  PlayerController: {fileID: 4642553757387499130}
   ListRigidBody: []
 --- !u!50 &4360485098941448076
 Rigidbody2D:

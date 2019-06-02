@@ -120,7 +120,6 @@ public class FrameSizer : MonoBehaviour
 		_frameSide = _top.localPosition.y - _bottom.localPosition.y;
 		_borderHalfWidth = 3.5f;
 		_frameCenter = (_top.localPosition + _bottom.localPosition) / 2;
-		//Debug.DrawLine(transform.position, _frameCenter);
 
         ScaleXAxis();
         ScaleYAxis();
@@ -131,11 +130,11 @@ public class FrameSizer : MonoBehaviour
 
 	private void ScaleXAxis()
 	{
-        _top.GetChild(0).localScale = new Vector3(_xScale, _top.GetChild(0).localScale.y, _top.GetChild(0).localScale.z);
-		_bottom.GetChild(0).localScale = new Vector3(_xScale, _bottom.GetChild(0).localScale.y, _bottom.GetChild(0).localScale.z);
-		_top.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_xScale, 1);
+        _top.GetChild(0).localScale = new Vector3(_xScale, 0.5f, _top.GetChild(0).localScale.z);
+		_bottom.GetChild(0).localScale = new Vector3(_xScale, 0.5f, _bottom.GetChild(0).localScale.z);
+		_top.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_xScale, 0.5f);
 		_top.GetComponent<CustomColliderEffector>().ColliderSideInWorldSpace = SPRITE_SIZE_IN_WORLD_SPACE * _xScale;
-		_bottom.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_xScale, 1);
+		_bottom.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_xScale, 0.5f);
 		_bottom.GetComponent<CustomColliderEffector>().ColliderSideInWorldSpace = SPRITE_SIZE_IN_WORLD_SPACE * _xScale;
 
 		float scaleRatio = _xScale / NORMAL_SCALE;
@@ -153,11 +152,11 @@ public class FrameSizer : MonoBehaviour
 
 	private void ScaleYAxis()
 	{
-		_right.GetChild(0).localScale = new Vector3(_yScale, _right.GetChild(0).localScale.y, _right.GetChild(0).localScale.z);
-		_left.GetChild(0).localScale = new Vector3(_yScale, _left.GetChild(0).localScale.y, _left.GetChild(0).localScale.z);
-		_right.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_yScale, 1);
+		_right.GetChild(0).localScale = new Vector3(_yScale, 0.5f, _right.GetChild(0).localScale.z);
+		_left.GetChild(0).localScale = new Vector3(_yScale, 0.5f, _left.GetChild(0).localScale.z);
+		_right.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_yScale, 0.5f);
 		_right.GetComponent<CustomColliderEffector>().ColliderSideInWorldSpace = SPRITE_SIZE_IN_WORLD_SPACE * _yScale;
-		_left.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_yScale, 1);
+		_left.GetComponent<BoxCollider2D>().size = SPRITE_SIZE_IN_WORLD_SPACE * new Vector2(_yScale, 0.5f);
 		_left.GetComponent<CustomColliderEffector>().ColliderSideInWorldSpace = SPRITE_SIZE_IN_WORLD_SPACE * _yScale;
 
 

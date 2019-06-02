@@ -29,6 +29,7 @@ public class BoxManager : MonoBehaviour
     private FrameSizer _frameSizer;
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     private OnCollisionObject _onCollisionObject;
+    public OnCollisionObject GetThisCollisionObject() => _onCollisionObject;
     [FoldoutGroup("Object"), Tooltip("")]
     public Rigidbody2D RbBox;
 

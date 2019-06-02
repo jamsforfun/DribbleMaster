@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Aglomera : MonoBehaviour
+public class Aglomera : MonoBehaviour, IKillable
 {
     [FoldoutGroup("GamePlay"), Tooltip(""), SerializeField, ReadOnly]
     private bool IsPushed = false;
@@ -111,7 +111,21 @@ public class Aglomera : MonoBehaviour
         {
             return;
         }
+        CombineThisAglomeraWithUs(other);
+    }
+
+    /// <summary>
+    /// combine this aglomera with us !
+    /// </summary>
+    /// <param name="other"></param>
+    private void CombineThisAglomeraWithUs(Aglomera other)
+    {
         Debug.Log("contact between 2 aglomera !");
+        for (int i = 0; i < other._allBoxManager.Count; i++)
+        {
+            AddThisBoxToOurAglomera(other._allBoxManager[i].GetThisCollisionObject());
+        }
+        other.Kill();
     }
 
     
@@ -138,5 +152,11 @@ public class Aglomera : MonoBehaviour
 
         OnPlayerPushOrUnpush();
         CollideWithOtherBox();
+    }
+
+    public void Kill()
+    {
+        _aglomeraManager.AllAglomera.Remove(this);
+        Destroy(gameObject);
     }
 }

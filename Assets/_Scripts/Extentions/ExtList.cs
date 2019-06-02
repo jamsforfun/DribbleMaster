@@ -31,6 +31,10 @@ public static class ExtList
     /// <returns>return false if already in the list, true if we add successfuly in the list</returns>
     public static bool AddIfNotContain<T>(this List<T> listEnum, T item)
     {
+        if (item == null)
+        {
+            return (false);
+        }
         if (listEnum.Contains(item))
         {
             return (false);

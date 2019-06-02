@@ -20,8 +20,8 @@ public class OnCollisionObject : MonoBehaviour
     private CountPlayerPushingBox _countPlayerPushingBox;
     [FoldoutGroup("Object"), ShowIf("TypeRigidBodyMe", TypeObject.BOX), SerializeField, FormerlySerializedAs("_boxManager")]
     private BoxManager BoxManager;
-    [FoldoutGroup("Object"), ShowIf("TypeRigidBodyMe", TypeObject.PLAYER), Tooltip(""), SerializeField]
-    private PlayerController _playerController;
+    [FoldoutGroup("Object"), ShowIf("TypeRigidBodyMe", TypeObject.PLAYER), Tooltip(""), FormerlySerializedAs("_playerController")]
+    public PlayerController PlayerController;
 
     [FoldoutGroup("Object"), Tooltip(""), SerializeField, ReadOnly]
     public List<OnCollisionObject> ListRigidBody = new List<OnCollisionObject>();
@@ -39,31 +39,48 @@ public class OnCollisionObject : MonoBehaviour
     }
 
     /// <summary>
+    /// return true if we are colliding with that specific object
+    /// </summary>
+    /// <param name="collisionObject"></param>
+    /// <returns></returns>
+    public bool DoWeAreCollidingWithThat(OnCollisionObject collisionObject)
+    {
+        return (ListRigidBody.Contains(collisionObject));
+    }
+
+    /// <summary>
     /// if we collide with other OnCollisionObject
     /// </summary>
     /// <param name="collision"></param>
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         OnCollisionObject collisionObject = collision.collider.GetExtComponentInParents<OnCollisionObject>(99, true);
 
-        
+
         if (collisionObject && !ListRigidBody.Contains(collisionObject))
         {
             ListRigidBody.Add(collisionObject);
+            collisionObject.ListRigidBody.AddIfNotContain(this);
+        }
 
-            //if we are a Box, and other collision is a player
-            if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.PLAYER)
-            {
-                BoxManager.OnPlayerPushOrUnpush();
-            }
-            //else if we are a box, and other is a box too...
-            else if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.BOX)
-            {
-                BoxManager.CollideWithOtherBox(collisionObject.BoxManager);
-            }
+        if (collisionObject == null)
+        {
+            return;
+        }
+
+        //if we are a Box, and other collision is a player
+        if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.PLAYER)
+        {
+            BoxManager.OnPlayerPushOrUnpush();
+        }
+        //else if we are a box, and other is a box too...
+        else if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.BOX)
+        {
+            BoxManager.CollideWithOtherBox(collisionObject.BoxManager);
         }
     }
 
+    
     private void OnCollisionExit2D(Collision2D collision)
     {
         OnCollisionObject collisionObject = collision.collider.GetExtComponentInParents<OnCollisionObject>(99, true);
@@ -72,6 +89,7 @@ public class OnCollisionObject : MonoBehaviour
         {
             ListRigidBody.Remove(collisionObject);
 
+            
             //if we are a Box, and other collision is a player
             if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.PLAYER)
             {
@@ -82,6 +100,8 @@ public class OnCollisionObject : MonoBehaviour
             {
                 BoxManager.UnCollideWithOtherBox(collisionObject.BoxManager);
             }
+            
         }
     }
+    
 }

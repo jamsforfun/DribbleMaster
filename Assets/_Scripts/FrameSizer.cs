@@ -54,6 +54,7 @@ public class FrameSizer : MonoBehaviour
         //if the number of player is the same as AmountPlayerNeeded, ok
         if ((int)AmountPlayerNeeded == numberOfPLayerPushing)
         {
+
             return (true);
         }
 

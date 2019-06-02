@@ -63,7 +63,7 @@ public class BoxManager : MonoBehaviour
         //here call the parent if exist
         if (_aglomeraRef != null)
         {
-            Debug.Log("here we are in an aglomera, do calculation for all the box inside !");
+
             IsPushed = false;
         }
         else

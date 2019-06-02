@@ -15,7 +15,6 @@ public class MovingBall : MonoBehaviour
     private float _coolDownBounce = 0.1f;
 
     private Vector2 lastDirection;
-    private FrequencyCoolDown coolDown = new FrequencyCoolDown();
 
     private void Start()
     {
@@ -34,21 +33,17 @@ public class MovingBall : MonoBehaviour
         }
 
         lastDirection = direction.normalized;
-        _rigidBody.velocity = lastDirection * _forceSpeed * Time.fixedDeltaTime;
+        _rigidBody.velocity = lastDirection * _forceSpeed * Time.deltaTime;
     }
 
     private void Move()
     {
         //_rigidBody.drag = 0f;
-        _rigidBody.velocity = _rigidBody.velocity.normalized * _forceSpeed * Time.fixedDeltaTime;
+        _rigidBody.velocity = _rigidBody.velocity.normalized * _forceSpeed * Time.deltaTime;
     }
 
     private void FixedUpdate()
     {
         Move();
-        if (coolDown.IsReady())
-        {
-
-        }
     }
 }

@@ -10,6 +10,9 @@ public class AglomerasManager : MonoBehaviour
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     private CountPlayerPushingBox _countPlayerPushingBox;
 
+    [FoldoutGroup("Object"), Tooltip(""), SerializeField]
+    public Transform ParentNormalBox;
+
     [FoldoutGroup("Prefabs"), Tooltip(""), SerializeField]
     private GameObject _aglomeraPrefabs;
 

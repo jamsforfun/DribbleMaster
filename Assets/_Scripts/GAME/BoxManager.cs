@@ -53,6 +53,24 @@ public class BoxManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// unplug from aglomera
+    /// </summary>
+    public void UnplugFromAglomera(Rigidbody2D settingsRb)
+    {
+        _onCollisionObject.enabled = true;
+        RbBox = gameObject.AddComponent<Rigidbody2D>();
+        RbBox.mass = 1f;
+        RbBox.bodyType = RigidbodyType2D.Dynamic;
+        RbBox.simulated = true;
+        RbBox.angularDrag = 1f;
+        RbBox.gravityScale = 0f;
+        RbBox.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        RbBox.sleepMode = RigidbodySleepMode2D.StartAwake;
+        RbBox.interpolation = RigidbodyInterpolation2D.None;
+        RbBox.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+
     private Aglomera IsOtherInAglomera()
     {
         for (int i = 0; i < _onCollisionObject.ListRigidBodyBox.Count; i++)
@@ -223,20 +241,35 @@ public class BoxManager : MonoBehaviour
         return (FrameSizer.IsObjectInsideBox(positionObject));
     }
 
+    public bool IsSomeOnePressingAInside()
+    {
+        for (int i = 0; i < AllPlayerInside.Count; i++)
+        {
+            if (AllPlayerInside[i].PlayerController.IsPressingAction())
+            {
+                return (true);
+            }
+        }
+        return (false);
+    }
+
     /// <summary>
     /// player pressing A: do not lock to a Aglomera
     /// </summary>
     private void PressingA()
     {
+        IsPressingA = IsSomeOnePressingAInside();
+        _boxUI.ActiveAction(IsPressingA);
+    }
+
+    public void ManualyPressA()
+    {
+        IsPressingA = true;
+        _boxUI.ActiveAction(IsPressingA);
+    }
+    public void ManualyUnpressA()
+    {
         IsPressingA = false;
-        for (int i = 0; i < AllPlayerInside.Count; i++)
-        {
-            if (AllPlayerInside[i].PlayerController.IsPressingAction())
-            {
-                IsPressingA = true;
-                break;
-            }
-        }
         _boxUI.ActiveAction(IsPressingA);
     }
 

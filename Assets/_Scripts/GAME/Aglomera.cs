@@ -36,6 +36,10 @@ public class Aglomera : MonoBehaviour, IKillable
         if (_aglomeraManager)
         {
             _aglomeraManager.AddAglomera(this);
+            for (int i = 0; i < _allBoxManager.Count; i++)
+            {
+                _countPlayerPushingBox.AddBox(_allBoxManager[i].GetThisCollisionObject());
+            }
         }
     }
 
@@ -57,6 +61,7 @@ public class Aglomera : MonoBehaviour, IKillable
         if (!_allBoxManager.Contains(other.BoxManager))
         {
             //here add a new box to our aglomera !
+            Debug.Log("here add a new box to our aglomera !");
             other.BoxManager.AglomeraRef = this;
             _allBoxManager.AddIfNotContain(other.BoxManager);
             other.BoxManager.transform.SetParent(transform);
@@ -109,13 +114,9 @@ public class Aglomera : MonoBehaviour, IKillable
 
         for (int i = 0; i < _allBoxManager.Count; i++)
         {
-            _allBoxManager[i].SetPushed(true);
+            _allBoxManager[i].SetPushed(IsPushed);
             _allBoxManager[i].ChangeColor();
         }
-        //change 
-        //ChangeMassCorrectly();
-        //ChangeColor();
-
     }
 
     /// <summary>
@@ -182,7 +183,41 @@ public class Aglomera : MonoBehaviour, IKillable
             }
         }
     }
-    
+
+    /// <summary>
+    /// unplug a box
+    /// </summary>
+    /// <param name="box"></param>
+    private void UnplugOneBox(BoxManager box, int index)
+    {
+        box.transform.SetParent(_aglomeraManager.ParentNormalBox);
+        _allBoxManager.RemoveAt(index);
+
+        box.enabled = true;
+        box.UnplugFromAglomera(_agloRigid);
+        Debug.Break();
+    }
+
+    /// <summary>
+    /// one player press A on a box
+    /// </summary>
+    private void PressA()
+    {
+        for (int i = 0; i < _allBoxManager.Count; i++)
+        {
+            if (_allBoxManager[i].IsSomeOnePressingAInside()
+                && _allBoxManager[i].FrameSizer.CanPushThis(_allBoxManager[i].AllPlayerInside.Count))
+            {
+                Debug.Log("ok to activate that one !");
+                _allBoxManager[i].ManualyPressA();
+                UnplugOneBox(_allBoxManager[i], i);
+            }
+            else
+            {
+                _allBoxManager[i].ManualyUnpressA();
+            }
+        }
+    }
 
     private void FixedUpdate()
     {
@@ -190,6 +225,8 @@ public class Aglomera : MonoBehaviour, IKillable
 
         OnPlayerPushOrUnpush();
         CollideWithOtherBox();
+
+        PressA();
     }
 
     public void Kill()

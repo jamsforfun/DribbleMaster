@@ -57,6 +57,7 @@ public class Aglomera : MonoBehaviour
             other.enabled = false;
 
             Destroy(other.BoxManager.RbBox);
+            _onCollisionObject.ListRigidBodyBox.Remove(other);
         }
     }
 
@@ -79,8 +80,63 @@ public class Aglomera : MonoBehaviour
         */
     }
 
+    /// <summary>
+    /// return the aglomera of the other !
+    /// </summary>
+    /// <returns></returns>
+    private Aglomera IsOtherInAglomera()
+    {
+        for (int i = 0; i < _onCollisionObject.ListRigidBodyBox.Count; i++)
+        {
+            if (_onCollisionObject.ListRigidBodyBox[i].BoxManager.AglomeraRef != null)
+            {
+                return (_onCollisionObject.ListRigidBodyBox[i].BoxManager.AglomeraRef);
+            }
+        }
+        return (null);
+    }
+
+    /// <summary>
+    /// try to have 2 aglomera stick with each other
+    /// </summary>
+    private void CollideWithOtherBox()
+    {
+        if (_onCollisionObject.ListRigidBodyBox.Count == 0)
+        {
+            return;
+        }
+        Aglomera other = IsOtherInAglomera();
+
+        if (other == null)
+        {
+            return;
+        }
+        Debug.Log("contact between 2 aglomera !");
+    }
+
+    
+    /// <summary>
+    /// remove child collider ! We don't want a child to collider with ourselve
+    /// </summary>
+    private void CleanColliderInsideUs()
+    {
+        for (int i = 0; i < _onCollisionObject.ListRigidBodyBox.Count; i++)
+        {
+            if (_onCollisionObject.ListRigidBodyBox[i].BoxManager.AglomeraRef
+                && _onCollisionObject.ListRigidBodyBox[i].BoxManager.AglomeraRef == this)
+            {
+                _onCollisionObject.ListRigidBodyBox.RemoveAt(i);
+                CleanColliderInsideUs();
+            }
+        }
+    }
+    
+
     private void FixedUpdate()
     {
+        CleanColliderInsideUs();
+
         OnPlayerPushOrUnpush();
+        CollideWithOtherBox();
     }
 }

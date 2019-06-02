@@ -30,7 +30,7 @@ public class OnCollisionObject : MonoBehaviour
     public List<OnCollisionObject> ListRigidBody = new List<OnCollisionObject>();
     [FoldoutGroup("Object"), Tooltip(""), SerializeField, ReadOnly]
     public List<OnCollisionObject> ListRigidBodyPlayer = new List<OnCollisionObject>();
-    [FoldoutGroup("Object"), Tooltip(""), SerializeField, ReadOnly]
+    [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     public List<OnCollisionObject> ListRigidBodyBox = new List<OnCollisionObject>();
 
     private void OnEnable()
@@ -66,6 +66,16 @@ public class OnCollisionObject : MonoBehaviour
 
         if (collisionObject && !ListRigidBody.Contains(collisionObject))
         {
+
+            //don't add if we are an Aglomera, and this object is a child of ourself !
+            if (collisionObject.TypeRigidBodyMe == TypeObject.AGLOMERA)
+            {
+                if (collisionObject.Aglomera && Aglomera && collisionObject.Aglomera.GetInstanceID() == Aglomera.GetInstanceID())
+                {
+                    return;
+                }
+            }
+
             ListRigidBody.Add(collisionObject);
             collisionObject.ListRigidBody.AddIfNotContain(this);
         }
@@ -85,7 +95,6 @@ public class OnCollisionObject : MonoBehaviour
         {
             ListRigidBodyBox.AddIfNotContain(collisionObject);
         }
-
     }
 
 

@@ -49,7 +49,8 @@ MonoBehaviour:
   _aglomeraManager: {fileID: 0}
   _allBoxManager: []
   _agloRigid: {fileID: 3820916170257414047}
-  _onCollisionObject: {fileID: 0}
+  _onCollisionObject: {fileID: 7467451409647824223}
+  _countPlayerPushingBox: {fileID: 0}
 --- !u!114 &7467451409647824223
 MonoBehaviour:
   m_ObjectHideFlags: 0

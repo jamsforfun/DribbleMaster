@@ -14,7 +14,7 @@ public class CountPlayerPushingBox : MonoBehaviour
     private List<OnCollisionObject> _box;
 
     [FoldoutGroup("Debug"), Tooltip(""), SerializeField]
-    private List<PlayerController> allPlayerPushingIt = new List<PlayerController>();
+    private List<OnCollisionObject> allPlayerPushingIt = new List<OnCollisionObject>();
 
     /// <summary>
     /// add player at start
@@ -45,12 +45,32 @@ public class CountPlayerPushingBox : MonoBehaviour
         {
             if (_player[i].DoWeAreCollidingWithThat(toTest))
             {
-                allPlayerPushingIt.AddIfNotContain(_player[i].PlayerController);
+                allPlayerPushingIt.AddIfNotContain(_player[i]);
             }
         }
+        TryToAddOther();
 
-        //here do another pass...
 
         return (allPlayerPushingIt.Count);
+    }
+
+    /// <summary>
+    /// Try to add the one pushing to other player...
+    /// </summary>
+    private void TryToAddOther()
+    {
+        //here do another pass...
+        for (int i = 0; i < allPlayerPushingIt.Count; i++)
+        {
+            for (int j = 0; j < allPlayerPushingIt[i].ListRigidBody.Count; j++)
+            {
+                if (allPlayerPushingIt[i].ListRigidBody[j].TypeRigidBodyMe == OnCollisionObject.TypeObject.PLAYER
+                    && !allPlayerPushingIt.Contains(allPlayerPushingIt[i].ListRigidBody[j]))
+                {
+                    allPlayerPushingIt.AddIfNotContain(allPlayerPushingIt[i].ListRigidBody[j]);
+                    TryToAddOther();
+                }
+            }
+        }
     }
 }

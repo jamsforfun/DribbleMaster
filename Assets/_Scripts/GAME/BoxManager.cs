@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Change the box mass depending on whatever players are pushing it or not
@@ -13,6 +14,7 @@ public class BoxManager : MonoBehaviour
 
     [FoldoutGroup("GamePlay"), Tooltip(""), SerializeField, ReadOnly]
     private bool IsPushed = false;
+    public void SetPushed(bool isPushed) => IsPushed = isPushed;
     [FoldoutGroup("GamePlay"), Tooltip(""), SerializeField, ReadOnly]
     private bool IsPressingA = false;
 
@@ -25,8 +27,8 @@ public class BoxManager : MonoBehaviour
     private AglomerasManager _aglomeraManager;
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     private BoxUI _boxUI;
-    [FoldoutGroup("Object"), Tooltip(""), SerializeField]
-    private FrameSizer _frameSizer;
+    [FoldoutGroup("Object"), Tooltip(""), SerializeField, FormerlySerializedAs("_frameSizer")]
+    public FrameSizer FrameSizer;
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     private OnCollisionObject _onCollisionObject;
     public OnCollisionObject GetThisCollisionObject() => _onCollisionObject;
@@ -180,7 +182,7 @@ public class BoxManager : MonoBehaviour
             int numberOfPlayer = _countPlayerPushingBox.GetNumberPlayerPushingMyBox(_onCollisionObject);
             numberOfPlayer = _countPlayerPushingBox.GetNumberOfPlayerActuallyPushing(AllPlayerColliding, ref AllPlayerCollidingAndPushing);
 
-            if (_frameSizer.CanPushThis(numberOfPlayer))
+            if (FrameSizer.CanPushThis(numberOfPlayer))
             {
                 RbBox.mass = MASS_WHEN_WE_CAN_PUSH;
                 IsPushed = true;
@@ -208,7 +210,7 @@ public class BoxManager : MonoBehaviour
     /// <summary>
     /// change color of box
     /// </summary>
-    private void ChangeColor()
+    public void ChangeColor()
     {
         for (int i = 0; i < _allSpriteRender.Length; i++)
         {
@@ -218,7 +220,7 @@ public class BoxManager : MonoBehaviour
 
     public bool IsObjectInsideBox(Vector3 positionObject)
     {
-        return (_frameSizer.IsObjectInsideBox(positionObject));
+        return (FrameSizer.IsObjectInsideBox(positionObject));
     }
 
     /// <summary>

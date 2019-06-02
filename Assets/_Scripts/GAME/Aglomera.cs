@@ -75,16 +75,47 @@ public class Aglomera : MonoBehaviour, IKillable
         }
     }
 
+    /// <summary>
+    /// can we push this big aglomera ?
+    /// </summary>
+    private bool CanPushAglomera(int numberPlayer)
+    {
+        for (int i = 0; i < _allBoxManager.Count; i++)
+        {
+            bool canPush = _allBoxManager[i].FrameSizer.CanPushThis(numberPlayer);
+            if (!canPush)
+            {
+                return (false);
+            }
+        }
+        return (true);
+    }
+
     private void OnPlayerPushOrUnpush()
     {
         int numberOfPlayer = _countPlayerPushingBox.GetNumberPlayerPushingMyAglomera(_onCollisionObject);
         numberOfPlayer = _countPlayerPushingBox.GetNumberOfPlayerActuallyPushing(AllPlayerColliding, ref AllPlayerCollidingAndPushing);
 
+        if (CanPushAglomera(numberOfPlayer))
+        {
+            _agloRigid.mass = BoxManager.MASS_WHEN_WE_CAN_PUSH;
+            IsPushed = true;
+        }
+        else
+        {
+            _agloRigid.mass = BoxManager.MASS_WHEN_WE_CANT_PUSH;
+            IsPushed = false;
+        }
+
         for (int i = 0; i < _allBoxManager.Count; i++)
         {
-
+            _allBoxManager[i].SetPushed(true);
+            _allBoxManager[i].ChangeColor();
         }
-        
+        //change 
+        //ChangeMassCorrectly();
+        //ChangeColor();
+
     }
 
     /// <summary>

@@ -15,8 +15,13 @@ GameObject:
   - component: {fileID: 4360485098941448076}
   - component: {fileID: 4360485098941448079}
   m_Layer: 0
+<<<<<<< HEAD:Assets/_Prefabs/Players/Player.prefab
   m_Name: Player
   m_TagString: Untagged
+=======
+  m_Name: Player 0
+  m_TagString: Player
+>>>>>>> adc458a11ad86401e51fc2040cab9e8d708f19aa:Assets/_Prefabs/Player 0.prefab
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -89,7 +94,10 @@ MonoBehaviour:
   _countPlayerPushingBox: {fileID: 0}
   BoxManager: {fileID: 0}
   PlayerController: {fileID: 4642553757387499130}
+<<<<<<< HEAD:Assets/_Prefabs/Players/Player.prefab
   Aglomera: {fileID: 0}
+=======
+>>>>>>> adc458a11ad86401e51fc2040cab9e8d708f19aa:Assets/_Prefabs/Player 0.prefab
   ListRigidBody: []
   ListRigidBodyPlayer: []
   ListRigidBodyBox: []

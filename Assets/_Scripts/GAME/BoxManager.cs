@@ -58,11 +58,18 @@ public class BoxManager : MonoBehaviour
     /// </summary>
     public void UnplugFromAglomera(Rigidbody2D settingsRb)
     {
+        Debug.Log("unplug from aglomera");
         _onCollisionObject.enabled = true;
-        RbBox = gameObject.AddComponent<Rigidbody2D>();
+        AglomeraRef = null;
+        _onCollisionObject.ListRigidBody.Clear();
+        _onCollisionObject.ListRigidBodyBox.Clear();
+        _onCollisionObject.ListRigidBodyPlayer.Clear();
+
+        RbBox = gameObject.GetOrAddComponent<Rigidbody2D>();
         RbBox.mass = 1f;
         RbBox.bodyType = RigidbodyType2D.Dynamic;
         RbBox.simulated = true;
+        RbBox.drag = 10f;
         RbBox.angularDrag = 1f;
         RbBox.gravityScale = 0f;
         RbBox.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
@@ -110,6 +117,7 @@ public class BoxManager : MonoBehaviour
         {
             return;
         }
+        ExtLog.LogList(_onCollisionObject.ListRigidBodyBox);
 
         Aglomera other = IsOtherInAglomera();
 

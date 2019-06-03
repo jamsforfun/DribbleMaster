@@ -148,6 +148,7 @@ public class Aglomera : MonoBehaviour, IKillable
 
         if (other == null)
         {
+
             return;
         }
         CombineThisAglomeraWithUs(other);
@@ -195,7 +196,6 @@ public class Aglomera : MonoBehaviour, IKillable
 
         box.enabled = true;
         box.UnplugFromAglomera(_agloRigid);
-        Debug.Break();
     }
 
     /// <summary>

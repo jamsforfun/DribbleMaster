@@ -18,10 +18,13 @@ public class PlayerController : MonoBehaviour
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     private SpriteRenderer[] eyes;
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
-    private Rigidbody2D _rigidBody;
+    public Rigidbody2D RigidBody;
 
     [FoldoutGroup("Object"), Tooltip("id unique du joueur correspondant à sa manette"), SerializeField]
     private PlayerInput _playerInput;
+    [FoldoutGroup("Debug"), Tooltip(""), SerializeField, ReadOnly]
+    public List<OnCollisionObject> AllBoxInside = new List<OnCollisionObject>();
+
 
     private Vector2 _lastMove;
 
@@ -39,6 +42,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// is the player holding action ?
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPressingAction()
+    {
+        return (_playerInput.Action);
+    }
+
     private void Move()
     {
         if (!_playerInput.IsMoving())
@@ -46,12 +58,17 @@ public class PlayerController : MonoBehaviour
             return;
         }
         //_rigidBody.drag = 0f;
-        _rigidBody.velocity = _playerInput.Move.normalized * _forceSpeed * Time.fixedDeltaTime;
+        RigidBody.velocity = _playerInput.Move.normalized * _forceSpeed * Time.fixedDeltaTime;
+    }
+
+    public bool IsMoving()
+    {
+        return (_playerInput.IsMoving());
     }
 
     private void Rotate()
     {
-        if (!_playerInput.IsMoving())
+        if (!IsMoving())
         {
             _mainSprite.transform.rotation = ExtQuaternion.DirObject2d(_mainSprite.transform.rotation,_lastMove, _turnRate, ExtQuaternion.TurnType.Z, false, false, true);
             return;
@@ -61,11 +78,9 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void FixedUpdate()
+    public void CustomFixedUpdate()
     {
         Move();
         Rotate();
-
-        
     }
 }

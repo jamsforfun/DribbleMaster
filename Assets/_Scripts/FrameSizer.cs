@@ -32,8 +32,9 @@ public class FrameSizer : MonoBehaviour
 	[FoldoutGroup("Frame sides"), SerializeField] private Transform _right;
 	[FoldoutGroup("Frame sides"), SerializeField] private Transform _bottom;
 	[FoldoutGroup("Frame sides"), SerializeField] private Transform _left;
+    [FoldoutGroup("Frame sides"), SerializeField] private Transform _center;
 
-	private float _frameSide;
+    private float _frameSide;
 	private float _borderHalfWidth;
 	private Vector2 _frameCenter;
 	private const float NORMAL_SCALE = 10;
@@ -52,7 +53,7 @@ public class FrameSizer : MonoBehaviour
         }
 
         //if the number of player is the same as AmountPlayerNeeded, ok
-        if ((int)AmountPlayerNeeded == numberOfPLayerPushing)
+        if ((int)AmountPlayerNeeded <= numberOfPLayerPushing)
         {
 
             return (true);
@@ -100,11 +101,24 @@ public class FrameSizer : MonoBehaviour
         }
     }
 
-#if UNITY_EDITOR
     //[UnityEditor.Callbacks.DidReloadScripts]
     private void OnEnable()
     {
         Init();
+    }
+
+    /// <summary>
+    /// is an object inside the square ?
+    /// </summary>
+    public bool IsObjectInsideBox(Vector2 positionObject)
+    {
+        Vector2 localPos = transform.InverseTransformPoint(positionObject);
+        if ( localPos.x > _left.localPosition.x && localPos.x < _right.localPosition.x
+            && localPos.y > _bottom.localPosition.y && localPos.y < _top.localPosition.y)
+        {
+            return (true);
+        }
+        return (false);
     }
 
     [Button]
@@ -121,6 +135,8 @@ public class FrameSizer : MonoBehaviour
 
         ScaleXAxis();
         ScaleYAxis();
+
+        _center.localPosition = _frameCenter;
 
         _air = _xScale * _yScale;
         SetupNumberOfNeededPlayerForPushing();
@@ -161,5 +177,4 @@ public class FrameSizer : MonoBehaviour
 			_bottom.localPosition = _frameCenter + scaleRatio * _frameSide  / 2 * Vector2.down;
 		}
 	}
-#endif
 }

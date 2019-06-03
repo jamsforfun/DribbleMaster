@@ -11,20 +11,27 @@ public class OnCollisionObject : MonoBehaviour
         NONE,
         BOX,
         PLAYER,
+        AGLOMERA,
     }
 
     [FoldoutGroup("Object"), Tooltip(""), SerializeField]
     public TypeObject TypeRigidBodyMe = TypeObject.PLAYER;
 
-    [FoldoutGroup("Object"), SerializeField]
+    [FoldoutGroup("Object"), HideIf("TypeRigidBodyMe", TypeObject.AGLOMERA), SerializeField]
     private CountPlayerPushingBox _countPlayerPushingBox;
     [FoldoutGroup("Object"), ShowIf("TypeRigidBodyMe", TypeObject.BOX), SerializeField, FormerlySerializedAs("_boxManager")]
-    private BoxManager BoxManager;
+    public BoxManager BoxManager;
     [FoldoutGroup("Object"), ShowIf("TypeRigidBodyMe", TypeObject.PLAYER), Tooltip(""), FormerlySerializedAs("_playerController")]
     public PlayerController PlayerController;
+    [FoldoutGroup("Object"), ShowIf("TypeRigidBodyMe", TypeObject.AGLOMERA), Tooltip(""), FormerlySerializedAs("_playerController")]
+    public Aglomera Aglomera;
 
     [FoldoutGroup("Object"), Tooltip(""), SerializeField, ReadOnly]
     public List<OnCollisionObject> ListRigidBody = new List<OnCollisionObject>();
+    [FoldoutGroup("Object"), Tooltip(""), SerializeField, ReadOnly]
+    public List<OnCollisionObject> ListRigidBodyPlayer = new List<OnCollisionObject>();
+    [FoldoutGroup("Object"), Tooltip(""), SerializeField]
+    public List<OnCollisionObject> ListRigidBodyBox = new List<OnCollisionObject>();
 
     private void OnEnable()
     {
@@ -59,6 +66,16 @@ public class OnCollisionObject : MonoBehaviour
 
         if (collisionObject && !ListRigidBody.Contains(collisionObject))
         {
+
+            //don't add if we are an Aglomera, and this object is a child of ourself !
+            if (collisionObject.TypeRigidBodyMe == TypeObject.AGLOMERA)
+            {
+                if (collisionObject.Aglomera && Aglomera && collisionObject.Aglomera.GetInstanceID() == Aglomera.GetInstanceID())
+                {
+                    return;
+                }
+            }
+
             ListRigidBody.Add(collisionObject);
             collisionObject.ListRigidBody.AddIfNotContain(this);
         }
@@ -68,19 +85,19 @@ public class OnCollisionObject : MonoBehaviour
             return;
         }
 
-        //if we are a Box, and other collision is a player
-        if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.PLAYER)
+        //if other is a player
+        if (collisionObject.TypeRigidBodyMe == TypeObject.PLAYER)
         {
-            BoxManager.OnPlayerPushOrUnpush();
+            ListRigidBodyPlayer.AddIfNotContain(collisionObject);
         }
-        //else if we are a box, and other is a box too...
-        else if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.BOX)
+        //if other is a box
+        else if (collisionObject.TypeRigidBodyMe == TypeObject.BOX)
         {
-            BoxManager.CollideWithOtherBox(collisionObject.BoxManager);
+            ListRigidBodyBox.AddIfNotContain(collisionObject);
         }
     }
 
-    
+
     private void OnCollisionExit2D(Collision2D collision)
     {
         OnCollisionObject collisionObject = collision.collider.GetExtComponentInParents<OnCollisionObject>(99, true);
@@ -88,19 +105,18 @@ public class OnCollisionObject : MonoBehaviour
         if (collisionObject && ListRigidBody.Contains(collisionObject))
         {
             ListRigidBody.Remove(collisionObject);
+            
+            //if other is a player
+            if (collisionObject.TypeRigidBodyMe == TypeObject.PLAYER)
+            {
+                ListRigidBodyPlayer.Remove(collisionObject);
+            }
+            //if other is a box
+            else if (collisionObject.TypeRigidBodyMe == TypeObject.BOX)
+            {
+                ListRigidBodyBox.Remove(collisionObject);
+            }
 
-            
-            //if we are a Box, and other collision is a player
-            if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.PLAYER)
-            {
-                BoxManager.OnPlayerPushOrUnpush();
-            }
-            //else if we are a box, and other is a box too...
-            else if (TypeRigidBodyMe == TypeObject.BOX && collisionObject.TypeRigidBodyMe == TypeObject.BOX)
-            {
-                BoxManager.UnCollideWithOtherBox(collisionObject.BoxManager);
-            }
-            
         }
     }
     

@@ -101,7 +101,6 @@ public class FrameSizer : MonoBehaviour
         }
     }
 
-#if UNITY_EDITOR
     //[UnityEditor.Callbacks.DidReloadScripts]
     private void OnEnable()
     {
@@ -178,5 +177,4 @@ public class FrameSizer : MonoBehaviour
 			_bottom.localPosition = _frameCenter + scaleRatio * _frameSide  / 2 * Vector2.down;
 		}
 	}
-#endif
 }
